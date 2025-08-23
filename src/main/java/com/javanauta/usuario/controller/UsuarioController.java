@@ -76,7 +76,6 @@ public class UsuarioController {
 
     @GetMapping("/endereco/{cep}")
     public ResponseEntity<ViaCepDTO> buscarDadosCep(@PathVariable("cep") String cep){
-        System.out.println("UsuarioController - buscarDadosCep");
         return ResponseEntity.ok(viaCepService.buscarDadosEndereco(cep));
     }
 }
