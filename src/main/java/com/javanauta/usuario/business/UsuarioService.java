@@ -35,18 +35,17 @@ public class UsuarioService {
     private final JwtUtil jwtUtil;
     private final EnderecoRepository enderecoRepository;
     private final TelefoneRepository telefoneRepository;
+    String emailJaCadastrado = "Email já cadastrado ";
 
     public UsuarioDTO salvarUsuario(UsuarioDTO usuarioDTO) {
-        System.out.println("Entrou em salvarUsuario");
+
         try{
             emailExiste(usuarioDTO.getEmail());
             usuarioDTO.setSenha(passwordEncoder.encode(usuarioDTO.getSenha()));
             Usuario usuario = usuarioConverter.paraUsuario(usuarioDTO);
-            System.out.println("vai salvar usuario");
             return usuarioConverter.paraUsuarioDTO(usuarioRepository.save(usuario));
         } catch (ConflictException e){
-            System.out.println("Entrou no catch");
-            throw new ConflictException("Email já cadastrado ", e.getCause());
+            throw new ConflictException(emailJaCadastrado, e.getCause());
         }
 
     }
@@ -68,10 +67,10 @@ public class UsuarioService {
         try{
             boolean existe = verificaEmailExistente(email);
             if (existe) {
-                throw new ConflictException("Email já cadastrado " + email);
+                throw new ConflictException(emailJaCadastrado + email);
             }
         } catch (ConflictException e) {
-            throw new ConflictException("Email já cadastrado ", e.getCause());
+            throw new ConflictException(emailJaCadastrado, e.getCause());
         }
     }
 
