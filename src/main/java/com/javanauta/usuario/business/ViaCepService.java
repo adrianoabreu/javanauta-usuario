@@ -15,7 +15,6 @@ public class ViaCepService {
     private final ViaCepClient client;
 
     public ViaCepDTO buscarDadosEndereco(String cep){
-//        System.out.println("ViaCepService - buscarDadosEndereco");
         return client.buscaDadosEndereco(processarCep(cep));
     }
 
