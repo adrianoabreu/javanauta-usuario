@@ -1,5 +1,9 @@
 package com.javanauta.usuario.infrastructure.security;
 
+import com.javanauta.usuario.infrastructure.exceptions.ResourceNotFoundException;
+import com.javanauta.usuario.infrastructure.exceptions.UnauthorizedException;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,8 +31,8 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
     // Método chamado uma vez por requisição para processar o filtro
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
-            throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain){
+       try{
 
         // Obtém o valor do header "Authorization" da requisição
         final String authorizationHeader = request.getHeader("Authorization");
@@ -57,5 +61,10 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
         // Continua a cadeia de filtros, permitindo que a requisição prossiga
         chain.doFilter(request, response);
+    } catch(ExpiredJwtException | MalformedJwtException e) {
+        throw new UnauthorizedException("Erro token invalido ou expirado ", e.getCause());
+    } catch(ServletException | IOException e){
+        throw new ResourceNotFoundException("Erro ao gerar o token", e);
     }
+   }
 }
