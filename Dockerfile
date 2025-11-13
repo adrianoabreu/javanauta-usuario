@@ -1,7 +1,7 @@
-FROM gradle:7-jdk-21-and-23-alpine as build
+FROM gradle:7-jdk-21-and-23-alpine AS build
 WORKDIR /app
 COPY . .
-RUN gradle build --no-daemon
+RUN ./gradlew build --no-daemon
 
 FROM alpine/java:21-jdk
 
